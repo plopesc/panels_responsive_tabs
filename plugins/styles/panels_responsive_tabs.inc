@@ -11,6 +11,7 @@ $plugin = array(
   'title' => t('Responsive Tabs'),
   'description' => t('Show panel panes in a region as responsive tabs.'),
   'render region' => 'panels_responsive_tabs_style_render_region',
+  'settings form' => 'panels_responsive_tabs_style_settings_form',
 );
 
 /**
@@ -40,16 +41,7 @@ function theme_panels_responsive_tabs_style_render_region($vars) {
   $settings = array(
     array(
       'identifier' => $tab_id,
-      'type' => 'default',
-      'width' => 'auto',
-      'fit' => TRUE,
-      'closed' => FALSE,
-      'tabidentify' => '',
-      'activetab_bg' => '#B5AC5F',
-      'inactive_bg' => '#E0D78C',
-      'active_border_color' => '#9C905C',
-      'active_content_border_color' => '#9C905C',
-    ),
+    ) + $vars['settings'],
   );
   $settings['panels_responsive_tabs'] = $settings;
 
@@ -108,4 +100,121 @@ function theme_panels_responsive_tabs_style_render_region($vars) {
   }
 
   return drupal_render($element);
+}
+
+/**
+ * Settings form callback.
+ */
+function panels_responsive_tabs_style_settings_form($style_settings) {
+  $defaults = array(
+    'classes'                     => '',
+    'type'                        => 'default',
+    'width'                       => 'auto',
+    'fit'                         => 1,
+    'closed'                      => 0,
+    'activetab_bg'                => '#B5AC5F',
+    'inactive_bg'                 => '#E0D78C',
+    'active_border_color'         => '#9C905C',
+    'active_content_border_color' => '#9C905C',
+    'tabidentify'                 => '',
+  );
+
+  // 'type': default, vertical, accordion.
+  $form['type'] = array(
+    '#title'         => t('Type'),
+    '#description'   => t('default, vertical, accordion'),
+    '#type'          => 'select',
+    '#options'       => array(
+      'default'   => 'Default',
+      'vertical'  => 'Vertical',
+      'accordion' => 'Accordion',
+    ),
+    '#default_value' => isset($style_settings['type']) ? $style_settings['type'] : $defaults['type'],
+    '#weight'        => 1,
+  );
+
+  // 'width': auto or any custom width.
+  $form['width'] = array(
+    '#title'         => t('Width'),
+    '#description'   => t('auto or any custom width'),
+    '#type'          => 'textfield',
+    '#default_value' => isset($style_settings['width']) ? $style_settings['width'] : $defaults['width'],
+    '#weight'        => 1.5,
+  );
+
+  // 'fit': 100% fits in a container.
+  $form['fit'] = array(
+    '#title'         => t('Fit'),
+    '#description'   => t('100% fits in a container'),
+    '#type'          => 'select',
+    '#options'       => array(
+      0 => t('No'),
+      1 => t('Yes'),
+    ),
+    '#default_value' => isset($style_settings['fit']) ? $style_settings['fit'] : $defaults['fit'],
+    '#weight'        => 1.5,
+  );
+
+  // 'close': Close the panels on start, the options 'accordion' and 'tabs'
+  // keep them closed in there respective view types.
+  $form['closed'] = array(
+    '#title'         => t('Closed'),
+    '#description'   => t('Close the panels on start, the options "accordion" and "tabs" keep them closed in there respective view types.'),
+    '#type'          => 'select',
+    '#options'       => array(
+      0 => t('No'),
+      1 => t('Yes'),
+    ),
+    '#default_value' => isset($style_settings['closed']) ? $style_settings['closed'] : $defaults['closed'],
+    '#weight'        => 1.5,
+  );
+
+  // 'activetab_bg': background color for active tabs in this group.
+  $form['activetab_bg'] = array(
+    '#title'         => t('Active tab bg'),
+    '#description'   => t('background color for active tabs in this group'),
+    '#type'          => 'textfield',
+    '#default_value' => isset($style_settings['activetab_bg']) ? $style_settings['activetab_bg'] : $defaults['activetab_bg'],
+    '#weight'        => 1.5,
+  );
+
+  // 'inactive_bg': background color for inactive tabs in this group.
+  $form['inactive_bg'] = array(
+    '#title'         => t('Inactive tab bg'),
+    '#description'   => t('background color for inactive tabs in this group'),
+    '#type'          => 'textfield',
+    '#default_value' => isset($style_settings['inactive_bg']) ? $style_settings['inactive_bg'] : $defaults['inactive_bg'],
+    '#weight'        => 1.5,
+  );
+
+  // 'active_border_color': border color for active tabs heads in this group.
+  $form['active_border_color'] = array(
+    '#title'         => t('Active border color'),
+    '#description'   => t('border color for active tabs heads in this group'),
+    '#type'          => 'textfield',
+    '#default_value' => isset($style_settings['active_border_color']) ? $style_settings['active_border_color'] : $defaults['active_border_color'],
+    '#weight'        => 1.5,
+  );
+
+  // 'active_content_border_color': border color for active tabs contect in
+  // this group so that it matches the tab head border.
+  $form['active_content_border_color'] = array(
+    '#title'         => t('Active content border color'),
+    '#description'   => t('border color for active tabs contect in this group so that it matches the tab head border'),
+    '#type'          => 'textfield',
+    '#default_value' => isset($style_settings['active_content_border_color']) ? $style_settings['active_content_border_color'] : $defaults['active_content_border_color'],
+    '#weight'        => 1.5,
+  );
+
+  // 'tabidentify': The tab groups identifier *This should be a unique name
+  // for each tab group and should not be defined in any styling or css file.
+  $form['tabidentify'] = array(
+    '#title'         => t('The tab groups identifier'),
+    '#description'   => t('The tab groups identifier *This should be a unique name for each tab group and should not be defined in any styling or css file.'),
+    '#type'          => 'textfield',
+    '#default_value' => isset($style_settings['tabidentify']) ? $style_settings['tabidentify'] : $defaults['tabidentify'],
+    '#weight'        => 2,
+  );
+
+  return $form;
 }
