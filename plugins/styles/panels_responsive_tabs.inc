@@ -31,7 +31,7 @@ function theme_panels_responsive_tabs_style_render_region($vars) {
     '#prefix' => '<div id="' . $tab_id . '">',
     '#suffix' => '</div>',
     '#attached' => array(
-      'library' => array(array('panels_responsive_tabs', 'easy-responsive-tabs')),
+      'libraries_load' => array(array('easy-responsive-tabs')),
       'js' => array(
         drupal_get_path('module', 'panels_responsive_tabs') . '/js/panels_responsive_tabs.js' => array('type' => 'file'),
       ),
