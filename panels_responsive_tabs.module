@@ -85,3 +85,23 @@ function panels_responsive_tabs_pane_titles($did = NULL, $pid = NULL, $title = N
   }
   $cache[$did][$pid] = $title;
 }
+
+/**
+ * Form element validation handler for responsive tabs width.
+ */
+function _panels_responsive_tabs_validate_width($element, &$form_state) {
+  $value = $element['#value'];
+  if (!preg_match('/^((\d*)(px|%|em)|auto)$/', $value)) {
+    form_error($element, t('%name must be a valid width value or \'auto\'.', array('%name' => $element['#title'])));
+  }
+}
+
+/**
+ * Form element validation handler for hex color values.
+ */
+function _panels_responsive_tabs_validate_color($element, &$form_state) {
+  $value = $element['#value'];
+  if (!preg_match('/^#(?:(?:[a-f\d]{3}){1,2})$/i', $value)) {
+    form_error($element, t('%name must be a valid hex color value.', array('%name' => $element['#title'])));
+  }
+}
