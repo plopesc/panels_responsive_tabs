@@ -38,12 +38,14 @@ function theme_panels_responsive_tabs_style_render_region($vars) {
     ),
   );
 
+  $vars['settings']['tabidentify'] = check_plain($vars['settings']['tabidentify']);
   $settings = array(
-    array(
-      'identifier' => $tab_id,
-    ) + $vars['settings'],
+    'panels_responsive_tabs' => array(
+      array(
+        'identifier' => $tab_id,
+      ) + $vars['settings'],
+    )
   );
-  $settings['panels_responsive_tabs'] = $settings;
 
   $element['#attached']['js'][] = array(
     'type' => 'setting',
@@ -82,7 +84,6 @@ function theme_panels_responsive_tabs_style_render_region($vars) {
     ),
   );
 
-  $items = array();
   $delta = 1;
   $element['tabs_content'] = array(
     '#type' => 'container',
@@ -140,6 +141,7 @@ function panels_responsive_tabs_style_settings_form($style_settings) {
     '#type'          => 'textfield',
     '#default_value' => isset($style_settings['width']) ? $style_settings['width'] : $defaults['width'],
     '#weight'        => 1.5,
+    '#element_validate' => array('_panels_responsive_tabs_validate_width'),
   );
 
   // 'fit': 100% fits in a container.
@@ -176,6 +178,7 @@ function panels_responsive_tabs_style_settings_form($style_settings) {
     '#type'          => 'textfield',
     '#default_value' => isset($style_settings['activetab_bg']) ? $style_settings['activetab_bg'] : $defaults['activetab_bg'],
     '#weight'        => 1.5,
+    '#element_validate' => array('_panels_responsive_tabs_validate_color'),
   );
 
   // 'inactive_bg': background color for inactive tabs in this group.
@@ -185,6 +188,7 @@ function panels_responsive_tabs_style_settings_form($style_settings) {
     '#type'          => 'textfield',
     '#default_value' => isset($style_settings['inactive_bg']) ? $style_settings['inactive_bg'] : $defaults['inactive_bg'],
     '#weight'        => 1.5,
+    '#element_validate' => array('_panels_responsive_tabs_validate_color'),
   );
 
   // 'active_border_color': border color for active tabs heads in this group.
@@ -194,6 +198,7 @@ function panels_responsive_tabs_style_settings_form($style_settings) {
     '#type'          => 'textfield',
     '#default_value' => isset($style_settings['active_border_color']) ? $style_settings['active_border_color'] : $defaults['active_border_color'],
     '#weight'        => 1.5,
+    '#element_validate' => array('_panels_responsive_tabs_validate_color'),
   );
 
   // 'active_content_border_color': border color for active tabs contect in
@@ -204,6 +209,7 @@ function panels_responsive_tabs_style_settings_form($style_settings) {
     '#type'          => 'textfield',
     '#default_value' => isset($style_settings['active_content_border_color']) ? $style_settings['active_content_border_color'] : $defaults['active_content_border_color'],
     '#weight'        => 1.5,
+    '#element_validate' => array('_panels_responsive_tabs_validate_color'),
   );
 
   // 'tabidentify': The tab groups identifier *This should be a unique name
